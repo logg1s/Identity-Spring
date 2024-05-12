@@ -12,12 +12,11 @@ import java.util.List;
 
 @Mapper(componentModel = MappingConstants.ComponentModel.SPRING)
 public interface UserMapper {
-    User userCreationRequestToUser(UserCreationRequest userCreationRequest);
+    User toUser(UserCreationRequest userCreationRequest);
 
-    void updateUserFromUserUpdateRequest(@MappingTarget User user, UserUpdateRequest userUpdateRequest);
+    UserResponse toUserResponse(User user);
 
-    UserResponse userToUserResponse(User user);
+    void updateUser(@MappingTarget User user, UserUpdateRequest userUpdateRequest);
 
-    List<UserResponse> usersToUserResponses(List<User> users);
-
+    List<UserResponse> toListUserResponse(List<User> users);
 }

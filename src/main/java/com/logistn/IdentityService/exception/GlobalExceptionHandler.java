@@ -63,10 +63,11 @@ public class GlobalExceptionHandler {
                         (existing, replacement) -> existing));
 
         ErrorMessage errorMessage = ErrorMessage.VALIDATOR_EXCEPTION;
-        ApiResponse<Object> apiResponse = new ApiResponse<>();
-        apiResponse.setCode(errorMessage.getCode());
-        apiResponse.setMessage(errorMessage.getMessage());
-        apiResponse.setResult(errorMap);
+        ApiResponse<Object> apiResponse = ApiResponse.builder()
+                .code(errorMessage.getCode())
+                .message(errorMessage.getMessage())
+                .result(errorMap)
+                .build();
         return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(apiResponse);
     }
 }
