@@ -1,6 +1,6 @@
-package com.logistn.IdentityService.dto.request;
+package com.logistn.IdentityService.dto.response;
 
-import jakarta.validation.constraints.Size;
+import com.fasterxml.jackson.annotation.JsonInclude;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -12,11 +12,10 @@ import java.time.LocalDate;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-public class UserCreationRequest {
-    @Size(min = 3, message = "USERNAME_NOT_MET_REQUIRED")
+@JsonInclude(JsonInclude.Include.NON_NULL)
+public class UserResponse {
+    private String id;
     private String username;
-    @Size(min = 8, message = "PASSWORD_NOT_MET_REQUIRED")
-    private String password;
     private String firstName;
     private String lastName;
     private LocalDate dob;

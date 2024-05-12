@@ -3,55 +3,55 @@ package com.logistn.IdentityService.controller;
 import com.logistn.IdentityService.dto.request.UserCreationRequest;
 import com.logistn.IdentityService.dto.request.UserUpdateRequest;
 import com.logistn.IdentityService.dto.response.ApiResponse;
-import com.logistn.IdentityService.entity.User;
 import com.logistn.IdentityService.service.UserService;
 import jakarta.validation.Valid;
-import org.springframework.beans.factory.annotation.Autowired;
+import lombok.RequiredArgsConstructor;
+import lombok.experimental.FieldDefaults;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-
-import java.util.List;
 
 @RestController
 @RequestMapping("/users")
+@RequiredArgsConstructor
+@FieldDefaults(makeFinal = true)
 public class UserController {
-    @Autowired
-    private UserService userService;
+    private final UserService userService;
 
     @GetMapping
-    ResponseEntity<Object> getUsers() {
-        ApiResponse<List<User>> apiResponse = new ApiResponse<>();
-        apiResponse.setResult(userService.getUsers());
-        return ResponseEntity.status(HttpStatus.OK).body(apiResponse);
+    ApiResponse<Object> getUsers() {
+        ApiResponse<Object> userApiResponse = new ApiResponse<>();
+        userApiResponse.setResult(userService.getUsers());
+        return userApiResponse;
     }
 
     @GetMapping("/{userId}")
-    ResponseEntity<Object> getUser(@PathVariable String userId) {
-        ApiResponse<User> apiResponse = new ApiResponse<>();
-        apiResponse.setResult(userService.getUser(userId));
-        return ResponseEntity.status(HttpStatus.OK).body(apiResponse);
+    ApiResponse<Object> getUser(@PathVariable String userId) {
+        ApiResponse<Object> userApiResponse = new ApiResponse<>();
+        userApiResponse.setResult(userService.getUser(userId));
+        return userApiResponse;
     }
 
     @PostMapping
-    ResponseEntity<Object> createUser(@RequestBody @Valid UserCreationRequest request) {
-        ApiResponse<User> userApiResponse = new ApiResponse<>();
+    @ResponseStatus(HttpStatus.CREATED)
+    ApiResponse<Object> createUser(@RequestBody @Valid UserCreationRequest request) {
+        ApiResponse<Object> userApiResponse = new ApiResponse<>();
         userApiResponse.setResult(userService.createUser(request));
-        return ResponseEntity.status(HttpStatus.CREATED).body(userApiResponse);
+        return userApiResponse;
     }
 
     @PutMapping("/{userId}")
-    ResponseEntity<Object> updateUser(@PathVariable String userId, @RequestBody @Valid UserUpdateRequest request) {
-        ApiResponse<User> userApiResponse = new ApiResponse<>();
+    @ResponseStatus(HttpStatus.CREATED)
+    ApiResponse<Object> updateUser(@PathVariable String userId, @RequestBody @Valid UserUpdateRequest request) {
+        ApiResponse<Object> userApiResponse = new ApiResponse<>();
         userApiResponse.setResult(userService.updateUser(userId, request));
-        return ResponseEntity.status(HttpStatus.CREATED).body(userApiResponse);
+        return userApiResponse;
     }
 
     @DeleteMapping("/{userId}")
-    ResponseEntity<Object> deleteUser(@PathVariable String userId) {
+    ApiResponse<Object> deleteUser(@PathVariable String userId) {
         userService.deleteUser(userId);
-        ApiResponse<String> userApiResponse = new ApiResponse<>();
+        ApiResponse<Object> userApiResponse = new ApiResponse<>();
         userApiResponse.setResult("User has been delete");
-        return ResponseEntity.status(HttpStatus.CREATED).body(userApiResponse);
+        return userApiResponse;
     }
 }
