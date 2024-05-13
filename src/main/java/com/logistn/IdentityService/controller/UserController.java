@@ -7,11 +7,7 @@ import com.logistn.IdentityService.service.UserService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpStatus;
-import org.springframework.security.core.context.SecurityContext;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
@@ -19,14 +15,10 @@ import org.springframework.web.bind.annotation.*;
 @RequiredArgsConstructor
 @FieldDefaults(makeFinal = true)
 public class UserController {
-    private static final Logger log = LoggerFactory.getLogger(UserController.class);
     private final UserService userService;
 
     @GetMapping
     ApiResponse<Object> getUsers() {
-        SecurityContext securityContext = SecurityContextHolder.getContext();
-        log.info("Username: {}", securityContext.getAuthentication().getName());
-        log.info("Role: {}", securityContext.getAuthentication().getAuthorities());
         ApiResponse<Object> userApiResponse = new ApiResponse<>();
         userApiResponse.setResult(userService.getUsers());
         return userApiResponse;
@@ -34,9 +26,15 @@ public class UserController {
 
     @GetMapping("/{userId}")
     ApiResponse<Object> getUser(@PathVariable String userId) {
-
         ApiResponse<Object> userApiResponse = new ApiResponse<>();
         userApiResponse.setResult(userService.getUser(userId));
+        return userApiResponse;
+    }
+
+    @GetMapping("/me")
+    ApiResponse<Object> getMyInfo() {
+        ApiResponse<Object> userApiResponse = new ApiResponse<>();
+        userApiResponse.setResult(userService.getMyInfo());
         return userApiResponse;
     }
 
@@ -59,6 +57,7 @@ public class UserController {
     @DeleteMapping("/{userId}")
     ApiResponse<Object> deleteUser(@PathVariable String userId) {
         userService.deleteUser(userId);
+
         ApiResponse<Object> userApiResponse = new ApiResponse<>();
         userApiResponse.setResult("User has been delete");
         return userApiResponse;

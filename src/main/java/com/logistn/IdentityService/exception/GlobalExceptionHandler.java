@@ -28,9 +28,11 @@ public class GlobalExceptionHandler {
     public ResponseEntity<ApiResponse<Object>> handlingException(Exception exception) {
         ErrorMessage errorMessage = ErrorMessage.UNKNOWN_EXCEPTION;
 
-        ApiResponse<Object> apiResponse = new ApiResponse<>();
-        apiResponse.setCode(errorMessage.getCode());
-        apiResponse.setMessage(errorMessage.getMessage() != null ? errorMessage.getMessage() : exception.getMessage());
+        ApiResponse<Object> apiResponse = ApiResponse.builder()
+                .code(errorMessage.getCode())
+                .message(errorMessage.getMessage() != null ? errorMessage.getMessage() : exception.getMessage())
+                .build();
+
         return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(apiResponse);
     }
 
@@ -38,9 +40,11 @@ public class GlobalExceptionHandler {
     public ResponseEntity<ApiResponse<Object>> handlingException(NoResourceFoundException exception) {
         ErrorMessage errorMessage = ErrorMessage.NO_RESOURCE_FOUND_EXCEPTION;
 
-        ApiResponse<Object> apiResponse = new ApiResponse<>();
-        apiResponse.setCode(errorMessage.getCode());
-        apiResponse.setMessage(errorMessage.getMessage() != null ? errorMessage.getMessage() : exception.getMessage());
+        ApiResponse<Object> apiResponse = ApiResponse.builder()
+                .code(errorMessage.getCode())
+                .message(errorMessage.getMessage() != null ? errorMessage.getMessage() : exception.getMessage())
+                .build();
+
         return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(apiResponse);
     }
 
@@ -48,9 +52,11 @@ public class GlobalExceptionHandler {
     public ResponseEntity<ApiResponse<Object>> handlingAppException(AppException exception) {
         ErrorMessage errorMessage = exception.getErrorMessage();
 
-        ApiResponse<Object> apiResponse = new ApiResponse<>();
-        apiResponse.setCode(errorMessage.getCode());
-        apiResponse.setMessage(errorMessage.getMessage() != null ? errorMessage.getMessage() : exception.getMessage());
+        ApiResponse<Object> apiResponse = ApiResponse.builder()
+                .code(errorMessage.getCode())
+                .message(errorMessage.getMessage() != null ? errorMessage.getMessage() : exception.getMessage())
+                .build();
+
         return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(apiResponse);
     }
 
