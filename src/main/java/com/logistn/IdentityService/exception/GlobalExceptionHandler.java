@@ -30,7 +30,7 @@ public class GlobalExceptionHandler {
 
         ApiResponse<Object> apiResponse = new ApiResponse<>();
         apiResponse.setCode(errorMessage.getCode());
-        apiResponse.setMessage(errorMessage.getMessage());
+        apiResponse.setMessage(errorMessage.getMessage() != null ? errorMessage.getMessage() : exception.getMessage());
         return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(apiResponse);
     }
 
@@ -40,7 +40,7 @@ public class GlobalExceptionHandler {
 
         ApiResponse<Object> apiResponse = new ApiResponse<>();
         apiResponse.setCode(errorMessage.getCode());
-        apiResponse.setMessage(errorMessage.getMessage());
+        apiResponse.setMessage(errorMessage.getMessage() != null ? errorMessage.getMessage() : exception.getMessage());
         return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(apiResponse);
     }
 
@@ -50,7 +50,7 @@ public class GlobalExceptionHandler {
 
         ApiResponse<Object> apiResponse = new ApiResponse<>();
         apiResponse.setCode(errorMessage.getCode());
-        apiResponse.setMessage(errorMessage.getMessage());
+        apiResponse.setMessage(errorMessage.getMessage() != null ? errorMessage.getMessage() : exception.getMessage());
         return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(apiResponse);
     }
 
@@ -65,7 +65,7 @@ public class GlobalExceptionHandler {
         ErrorMessage errorMessage = ErrorMessage.VALIDATOR_EXCEPTION;
         ApiResponse<Object> apiResponse = ApiResponse.builder()
                 .code(errorMessage.getCode())
-                .message(errorMessage.getMessage())
+                .message(errorMessage.getMessage() != null ? errorMessage.getMessage() : exception.getMessage())
                 .result(errorMap)
                 .build();
         return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(apiResponse);
