@@ -86,9 +86,9 @@ public class AuthenticationService {
 
     private String buildRoles(User user) {
         StringJoiner stringJoiner = new StringJoiner(" ");
-        if (!user.getRoles().isEmpty()) {
-            user.getRoles().forEach(stringJoiner::add);
-        }
+//        if (!user.getRoles().isEmpty()) {
+//            user.getRoles().forEach(stringJoiner::add);
+//        }
         return stringJoiner.toString();
     }
 }

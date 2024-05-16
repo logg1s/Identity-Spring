@@ -1,6 +1,7 @@
 package com.logistn.IdentityService.dto.response;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
+import com.logistn.IdentityService.entity.Role;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -20,5 +21,5 @@ public class UserResponse {
     private String firstName;
     private String lastName;
     private LocalDate dob;
-    private Set<String> roles;
+    private Set<Role> roles;
 }

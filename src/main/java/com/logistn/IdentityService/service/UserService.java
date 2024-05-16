@@ -12,7 +12,6 @@ import com.logistn.IdentityService.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
 import org.springframework.security.access.prepost.PostAuthorize;
-import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -38,12 +37,11 @@ public class UserService {
 
         Set<String> set = new HashSet<>();
         set.add(Role.USER.name());
-        user.setRoles(set);
+//        user.setRoles(set);
 
         return userMapper.toUserResponse(userRepository.save(user));
     }
 
-    @PreAuthorize("hasRole('ADMIN')")
     public List<UserResponse> getUsers() {
         return userMapper.toListUserResponse(userRepository.findAll());
     }

@@ -1,8 +1,8 @@
 package com.logistn.IdentityService.exception;
 
 import com.logistn.IdentityService.dto.response.ApiResponse;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.AccessDeniedException;
 import org.springframework.validation.FieldError;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
@@ -33,7 +33,7 @@ public class GlobalExceptionHandler {
                 .message(errorMessage.getMessage() != null ? errorMessage.getMessage() : exception.getMessage())
                 .build();
 
-        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(apiResponse);
+        return ResponseEntity.status(errorMessage.getStatusCode()).body(apiResponse);
     }
 
     @ExceptionHandler(value = NoResourceFoundException.class)
@@ -45,7 +45,20 @@ public class GlobalExceptionHandler {
                 .message(errorMessage.getMessage() != null ? errorMessage.getMessage() : exception.getMessage())
                 .build();
 
-        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(apiResponse);
+        return ResponseEntity.status(errorMessage.getStatusCode()).body(apiResponse);
+    }
+
+
+    @ExceptionHandler(value = AccessDeniedException.class)
+    public ResponseEntity<ApiResponse<Object>> handlingAccessDenied() {
+        ErrorMessage errorMessage = ErrorMessage.UNAUTHORIZED;
+
+        ApiResponse<Object> apiResponse = ApiResponse.builder()
+                .code(errorMessage.getCode())
+                .message(errorMessage.getMessage())
+                .build();
+
+        return ResponseEntity.status(errorMessage.getStatusCode()).body(apiResponse);
     }
 
     @ExceptionHandler(value = AppException.class)
@@ -57,7 +70,7 @@ public class GlobalExceptionHandler {
                 .message(errorMessage.getMessage() != null ? errorMessage.getMessage() : exception.getMessage())
                 .build();
 
-        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(apiResponse);
+        return ResponseEntity.status(errorMessage.getStatusCode()).body(apiResponse);
     }
 
     @ExceptionHandler(value = MethodArgumentNotValidException.class)
@@ -74,6 +87,8 @@ public class GlobalExceptionHandler {
                 .message(errorMessage.getMessage() != null ? errorMessage.getMessage() : exception.getMessage())
                 .result(errorMap)
                 .build();
-        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(apiResponse);
+        return ResponseEntity.status(errorMessage.getStatusCode()).body(apiResponse);
     }
+
+
 }
