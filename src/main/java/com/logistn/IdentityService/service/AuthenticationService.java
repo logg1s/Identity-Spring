@@ -94,10 +94,8 @@ public class AuthenticationService {
         if (!user.getRoles().isEmpty()) {
             Set<String> set = new HashSet<>();
             for (Role role : user.getRoles()) {
-//                stringJoiner.add("ROLE_" + role.getName());
                 set.add("ROLE_" + role.getName());
                 for (Permission permission : role.getPermissions()) {
-//                    stringJoiner.add(permission.getName());
                     set.add(permission.getName());
                 }
             }

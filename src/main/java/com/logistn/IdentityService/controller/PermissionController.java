@@ -3,6 +3,7 @@ package com.logistn.IdentityService.controller;
 import com.logistn.IdentityService.dto.request.PermissionRequest;
 import com.logistn.IdentityService.dto.response.ApiResponse;
 import com.logistn.IdentityService.service.PermissionService;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.*;
@@ -15,7 +16,7 @@ public class PermissionController {
     private final PermissionService permissionService;
 
     @PostMapping
-    public ApiResponse<Object> create(@RequestBody PermissionRequest request) {
+    public ApiResponse<Object> create(@RequestBody @Valid PermissionRequest request) {
         return ApiResponse.builder()
                 .result(permissionService.create(request))
                 .build();

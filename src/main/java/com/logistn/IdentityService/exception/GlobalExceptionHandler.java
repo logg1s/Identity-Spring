@@ -18,7 +18,7 @@ public class GlobalExceptionHandler {
         try {
             return ErrorMessage.valueOf(error.getDefaultMessage()).getMessage();
         } catch (IllegalArgumentException e) {
-            String s = "Invalid key error enum: " + error.getDefaultMessage();
+            String s = error.getDefaultMessage();
             System.out.println(s);
             return s;
         }

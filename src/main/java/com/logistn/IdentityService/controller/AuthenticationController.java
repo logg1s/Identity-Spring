@@ -5,6 +5,7 @@ import com.logistn.IdentityService.dto.request.IntrospectRequest;
 import com.logistn.IdentityService.dto.response.ApiResponse;
 import com.logistn.IdentityService.service.AuthenticationService;
 import com.nimbusds.jose.JOSEException;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -22,14 +23,14 @@ public class AuthenticationController {
     private final AuthenticationService authenticationService;
 
     @PostMapping("/login")
-    ApiResponse<Object> authenticate(@RequestBody AuthenticationRequest request) {
+    ApiResponse<Object> authenticate(@RequestBody @Valid AuthenticationRequest request) {
         ApiResponse<Object> apiResponse = new ApiResponse<>();
         apiResponse.setResult(authenticationService.authenticate(request));
         return apiResponse;
     }
 
     @PostMapping("/introspect")
-    ApiResponse<Object> introspect(@RequestBody IntrospectRequest request) throws ParseException, JOSEException {
+    ApiResponse<Object> introspect(@RequestBody @Valid IntrospectRequest request) throws ParseException, JOSEException {
         ApiResponse<Object> apiResponse = new ApiResponse<>();
         apiResponse.setResult(authenticationService.introspect(request));
         return apiResponse;
