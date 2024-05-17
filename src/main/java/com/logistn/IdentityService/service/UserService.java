@@ -3,22 +3,23 @@ package com.logistn.IdentityService.service;
 import com.logistn.IdentityService.dto.request.UserCreationRequest;
 import com.logistn.IdentityService.dto.request.UserUpdateRequest;
 import com.logistn.IdentityService.dto.response.UserResponse;
+import com.logistn.IdentityService.entity.Role;
 import com.logistn.IdentityService.entity.User;
-import com.logistn.IdentityService.enums.Role;
 import com.logistn.IdentityService.exception.AppException;
 import com.logistn.IdentityService.exception.ErrorMessage;
 import com.logistn.IdentityService.mapper.UserMapper;
+import com.logistn.IdentityService.repository.RoleRepository;
 import com.logistn.IdentityService.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
 import org.springframework.security.access.prepost.PostAuthorize;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.util.HashSet;
 import java.util.List;
-import java.util.Set;
 
 @Service
 @RequiredArgsConstructor
@@ -27,6 +28,7 @@ public class UserService {
     private final UserRepository userRepository;
     private final UserMapper userMapper;
     private final PasswordEncoder passwordEncoder;
+    private final RoleRepository roleRepository;
 
     public UserResponse createUser(UserCreationRequest request) {
         if (userRepository.existsByUsername(request.getUsername())) {
@@ -35,13 +37,13 @@ public class UserService {
         User user = userMapper.toUser(request);
         user.setPassword(passwordEncoder.encode(request.getPassword()));
 
-        Set<String> set = new HashSet<>();
-        set.add(Role.USER.name());
-//        user.setRoles(set);
+        List<Role> roles = roleRepository.findAllById(request.getRoles());
+        user.setRoles(new HashSet<>(roles));
 
         return userMapper.toUserResponse(userRepository.save(user));
     }
 
+    @PreAuthorize("hasRole('ADMIN')")
     public List<UserResponse> getUsers() {
         return userMapper.toListUserResponse(userRepository.findAll());
     }
@@ -61,7 +63,11 @@ public class UserService {
     public UserResponse updateUser(String userId, UserUpdateRequest request) {
         User user = userRepository.findById(userId).orElseThrow(() -> new AppException(ErrorMessage.USER_NOT_FOUND));
         userMapper.updateUser(user, request);
+
+        List<Role> roles = roleRepository.findAllById(request.getRoles());
         user.setPassword(passwordEncoder.encode(request.getPassword()));
+        user.setRoles(new HashSet<>(roles));
+
         return userMapper.toUserResponse(userRepository.save(user));
     }
 

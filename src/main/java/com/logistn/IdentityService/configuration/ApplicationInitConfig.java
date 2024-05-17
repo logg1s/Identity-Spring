@@ -1,7 +1,10 @@
 package com.logistn.IdentityService.configuration;
 
+import com.logistn.IdentityService.entity.Role;
 import com.logistn.IdentityService.entity.User;
-import com.logistn.IdentityService.enums.Role;
+import com.logistn.IdentityService.exception.AppException;
+import com.logistn.IdentityService.exception.ErrorMessage;
+import com.logistn.IdentityService.repository.RoleRepository;
 import com.logistn.IdentityService.repository.UserRepository;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.boot.ApplicationRunner;
@@ -16,15 +19,16 @@ import java.util.Set;
 @Slf4j
 public class ApplicationInitConfig {
     @Bean
-    ApplicationRunner applicationRunner(UserRepository userRepository, PasswordEncoder passwordEncoder) {
+    ApplicationRunner applicationRunner(UserRepository userRepository, PasswordEncoder passwordEncoder, RoleRepository roleRepository) {
         return args -> {
             if (userRepository.findByUsername("admin").isEmpty()) {
-                Set<String> roles = new HashSet<>();
-                roles.add(Role.ADMIN.name());
+                Role role = roleRepository.findById("ADMIN").orElseThrow(() -> new AppException(ErrorMessage.UNKNOWN_EXCEPTION));
+                Set<Role> roles = new HashSet<>();
+                roles.add(role);
                 User user = User.builder()
                         .username("admin")
                         .password(passwordEncoder.encode("admin"))
-//                        .roles(roles)
+                        .roles(roles)
                         .build();
                 userRepository.save(user);
                 log.warn("First run app with Administrator account: admin");

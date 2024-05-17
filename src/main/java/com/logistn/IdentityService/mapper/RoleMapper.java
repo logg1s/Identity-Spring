@@ -13,6 +13,8 @@ import java.util.List;
 public interface RoleMapper {
     @Mapping(target = "permissions", ignore = true)
     Role toRole(RoleRequest request);
+
     RoleResponse toRoleResponse(Role role);
+
     List<RoleResponse> toListRoleResponses(List<Role> roles);
 }

@@ -23,6 +23,7 @@ public class RoleService {
     private final RoleRepository roleRepository;
     private final RoleMapper roleMapper;
     private final PermissionRepository permissionRepository;
+    private final AuthenticationService authenticationService;
 
     public RoleResponse create(RoleRequest request) {
         List<Permission> permissions = permissionRepository.findAllById(request.getPermissions());
@@ -30,6 +31,7 @@ public class RoleService {
         role.setPermissions(new HashSet<>(permissions));
         return roleMapper.toRoleResponse(roleRepository.save(role));
     }
+
 
     public List<RoleResponse> getAll() {
         return roleMapper.toListRoleResponses(roleRepository.findAll());

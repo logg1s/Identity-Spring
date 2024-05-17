@@ -21,7 +21,7 @@ logging:
     org.springframework.security: DEBUG
     org.springframework.web: DEBUG
     org.springframework.data.jpa: DEBUG
-    
+
 jwt:
   secretKey: "NxFrvBWMm8yoeW/wVgyLDqo1BRa5cHTnyB8m3YH0tOuIj889lrly8ZjGvpzfbfff"
 

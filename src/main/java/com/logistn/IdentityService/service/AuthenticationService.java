@@ -4,6 +4,8 @@ import com.logistn.IdentityService.dto.request.AuthenticationRequest;
 import com.logistn.IdentityService.dto.request.IntrospectRequest;
 import com.logistn.IdentityService.dto.response.AuthenticationResponse;
 import com.logistn.IdentityService.dto.response.IntrospectResponse;
+import com.logistn.IdentityService.entity.Permission;
+import com.logistn.IdentityService.entity.Role;
 import com.logistn.IdentityService.entity.User;
 import com.logistn.IdentityService.exception.AppException;
 import com.logistn.IdentityService.exception.ErrorMessage;
@@ -26,6 +28,8 @@ import java.text.ParseException;
 import java.time.Instant;
 import java.time.temporal.ChronoUnit;
 import java.util.Date;
+import java.util.HashSet;
+import java.util.Set;
 import java.util.StringJoiner;
 
 @Service
@@ -86,9 +90,21 @@ public class AuthenticationService {
 
     private String buildRoles(User user) {
         StringJoiner stringJoiner = new StringJoiner(" ");
-//        if (!user.getRoles().isEmpty()) {
-//            user.getRoles().forEach(stringJoiner::add);
-//        }
+
+        if (!user.getRoles().isEmpty()) {
+            Set<String> set = new HashSet<>();
+            for (Role role : user.getRoles()) {
+//                stringJoiner.add("ROLE_" + role.getName());
+                set.add("ROLE_" + role.getName());
+                for (Permission permission : role.getPermissions()) {
+//                    stringJoiner.add(permission.getName());
+                    set.add(permission.getName());
+                }
+            }
+            for (String str : set) {
+                stringJoiner.add(str);
+            }
+        }
         return stringJoiner.toString();
     }
 }

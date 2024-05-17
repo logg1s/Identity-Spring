@@ -11,6 +11,8 @@ import java.util.List;
 @Mapper(componentModel = MappingConstants.ComponentModel.SPRING)
 public interface PermissionMapper {
     Permission toPermission(PermissionRequest request);
+
     PermissionResponse toPermissionResponse(Permission permission);
+
     List<PermissionResponse> toListPermissionResponses(List<Permission> listPermissions);
 }
