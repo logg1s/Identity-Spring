@@ -10,11 +10,10 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-public class AuthenticationRequest {
+public class RefreshTokenRequest {
     @NotNull
-    private String username;
+    private String accessToken;
 
     @NotNull
-    private String password;
-
+    private String refreshToken;
 }

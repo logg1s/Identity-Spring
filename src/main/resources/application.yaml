@@ -23,5 +23,7 @@ logging:
     org.springframework.data.jpa: debug
 
 jwt:
-  secretKey: "NxFrvBWMm8yoeW/wVgyLDqo1BRa5cHTnyB8m3YH0tOuIj889lrly8ZjGvpzfbfff"
+  Key: "NxFrvBWMm8yoeW/wVgyLDqo1BRa5cHTnyB8m3YH0tOuIj889lrly8ZjGvpzfbfff"
+  AT.Time: 10
+  RT.Time: 7
 

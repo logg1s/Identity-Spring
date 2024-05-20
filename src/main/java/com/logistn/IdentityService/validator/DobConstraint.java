@@ -15,7 +15,7 @@ import static java.lang.annotation.RetentionPolicy.RUNTIME;
 public @interface DobConstraint {
     int min();
 
-    String message() default "Dob invalid";
+    String message() default "Age must be at lease >= {min}";
 
     Class<?>[] groups() default {};
 

@@ -7,13 +7,11 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 @Data
-@Builder
 @NoArgsConstructor
 @AllArgsConstructor
+@Builder
 @JsonInclude(JsonInclude.Include.NON_NULL)
-public class ApiResponse<T> {
-    @Builder.Default
-    private int code = 1000;
-    private String message;
-    private T result;
+public class RefreshTokenResponse {
+    private String accessToken;
+    private String refreshToken;
 }

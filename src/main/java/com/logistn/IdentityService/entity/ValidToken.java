@@ -4,14 +4,18 @@ import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
 import lombok.*;
 
+import java.util.Date;
+
 @Entity
 @Getter
 @Setter
+@Builder
 @NoArgsConstructor
 @AllArgsConstructor
-@Builder
-public class Permission {
+public class ValidToken {
     @Id
-    private String name;
-    private String description;
+    private String accessTokenId;
+    private String refreshTokenId;
+    private String prevTokenId;
+    private Date refreshTime;
 }

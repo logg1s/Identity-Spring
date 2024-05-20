@@ -12,5 +12,5 @@ import lombok.NoArgsConstructor;
 @Builder
 public class IntrospectRequest {
     @NotNull
-    private String token;
+    private String accessToken;
 }

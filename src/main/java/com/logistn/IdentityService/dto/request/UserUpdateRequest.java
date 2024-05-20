@@ -16,7 +16,7 @@ import java.util.Set;
 @NoArgsConstructor
 @AllArgsConstructor
 public class UserUpdateRequest {
-    @Size(min = 8, message = "PASSWORD_NOT_MET_REQUIRED")
+    @Size(min = 8, max = 32)
     @NotNull
     private String password;
     @NotNull
@@ -24,7 +24,7 @@ public class UserUpdateRequest {
     @NotNull
     private String lastName;
 
-    @DobConstraint(min = 18, message = "INVALID_DOB")
+    @DobConstraint(min = 18)
     @NotNull
     private LocalDate dob;
 
