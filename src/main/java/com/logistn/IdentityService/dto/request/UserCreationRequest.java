@@ -15,7 +15,7 @@ import java.time.LocalDate;
 @NoArgsConstructor
 @AllArgsConstructor
 public class UserCreationRequest {
-    @Size(min = 3, message = "USERNAME_NOT_MET_REQUIRED")
+    @Size(min = 4, message = "USERNAME_NOT_MET_REQUIRED")
     @NotNull
     private String username;
     @Size(min = 8, max = 32)

@@ -38,7 +38,7 @@ public class UserService {
         User user = userMapper.toUser(request);
         user.setPassword(passwordEncoder.encode(request.getPassword()));
 
-        Role userRole = roleRepository.findById("USER").orElseThrow(() -> new AppException(ErrorMessage.USER_NOT_FOUND));
+        Role userRole = roleRepository.findById("USER").orElseThrow(() -> new AppException(ErrorMessage.ROLE_NOT_FOUND));
         Set<Role> roles = new HashSet<>();
         roles.add(userRole);
         user.setRoles(roles);

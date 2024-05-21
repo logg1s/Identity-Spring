@@ -7,6 +7,7 @@ import com.logistn.IdentityService.exception.ErrorMessage;
 import com.logistn.IdentityService.repository.RoleRepository;
 import com.logistn.IdentityService.repository.UserRepository;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.ApplicationRunner;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -18,10 +19,13 @@ import java.util.Set;
 @Configuration
 @Slf4j
 public class ApplicationInitConfig {
+    @Value("${env.testMode}")
+    private boolean isTestMode;
+
     @Bean
     ApplicationRunner applicationRunner(UserRepository userRepository, PasswordEncoder passwordEncoder, RoleRepository roleRepository) {
         return args -> {
-            if (userRepository.findByUsername("admin").isEmpty()) {
+            if (!isTestMode && userRepository.findByUsername("admin").isEmpty()) {
                 Role role = roleRepository.findById("ADMIN").orElseThrow(() -> new AppException(ErrorMessage.UNKNOWN_EXCEPTION));
                 Set<Role> roles = new HashSet<>();
                 roles.add(role);

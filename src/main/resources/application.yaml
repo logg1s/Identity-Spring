@@ -27,3 +27,9 @@ jwt:
   AT.Time: 10
   RT.Time: 7
 
+env:
+  testMode: ${TEST_MODE:false}
+
+
+
+
