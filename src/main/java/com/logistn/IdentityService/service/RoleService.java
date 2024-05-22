@@ -7,13 +7,12 @@ import com.logistn.IdentityService.entity.Role;
 import com.logistn.IdentityService.mapper.RoleMapper;
 import com.logistn.IdentityService.repository.PermissionRepository;
 import com.logistn.IdentityService.repository.RoleRepository;
+import java.util.HashSet;
+import java.util.List;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
-
-import java.util.HashSet;
-import java.util.List;
 
 @Service
 @Slf4j
@@ -32,19 +31,18 @@ public class RoleService {
         return roleMapper.toRoleResponse(roleRepository.save(role));
     }
 
-
     public List<RoleResponse> getAll() {
         return roleMapper.toListRoleResponses(roleRepository.findAll());
 
-//        List<Role> roleList = roleRepository.findAll();
-//        return roleList.stream().map(role -> {
-//            Set<PermissionResponse> permissionResponses = role.getPermissions()
-//                    .stream()
-//                    .map(permission -> new PermissionResponse(
-//                            permission.getName(), permission.getDescription()))
-//                    .collect(Collectors.toSet());
-//            return new RoleResponse(role.getName(), role.getDescription(), permissionResponses);
-//        }).toList();
+        //        List<Role> roleList = roleRepository.findAll();
+        //        return roleList.stream().map(role -> {
+        //            Set<PermissionResponse> permissionResponses = role.getPermissions()
+        //                    .stream()
+        //                    .map(permission -> new PermissionResponse(
+        //                            permission.getName(), permission.getDescription()))
+        //                    .collect(Collectors.toSet());
+        //            return new RoleResponse(role.getName(), role.getDescription(), permissionResponses);
+        //        }).toList();
     }
 
     public void delete(String roleId) {

@@ -23,6 +23,11 @@ import com.nimbusds.jose.crypto.MACSigner;
 import com.nimbusds.jose.crypto.MACVerifier;
 import com.nimbusds.jwt.JWTClaimsSet;
 import com.nimbusds.jwt.SignedJWT;
+import java.text.ParseException;
+import java.time.Instant;
+import java.time.temporal.ChronoUnit;
+import java.time.temporal.TemporalUnit;
+import java.util.*;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
 import lombok.experimental.NonFinal;
@@ -31,12 +36,6 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
-
-import java.text.ParseException;
-import java.time.Instant;
-import java.time.temporal.ChronoUnit;
-import java.time.temporal.TemporalUnit;
-import java.util.*;
 
 @Service
 @RequiredArgsConstructor
@@ -60,13 +59,16 @@ public class AuthenticationService {
     private int RT_TIME;
 
     public AuthenticationResponse authenticate(AuthenticationRequest request) throws ParseException {
-        User user = userRepository.findByUsername(request.getUsername()).orElseThrow(() -> new AppException(ErrorMessage.UNAUTHENTICATED));
+        User user = userRepository
+                .findByUsername(request.getUsername())
+                .orElseThrow(() -> new AppException(ErrorMessage.UNAUTHENTICATED));
         boolean isAuth = passwordEncoder.matches(request.getPassword(), user.getPassword());
         if (!isAuth) {
             throw new AppException(ErrorMessage.UNAUTHENTICATED);
         }
         WrappedTokens wrappedTokens = saveValidToken(user, null);
-        return new AuthenticationResponse(wrappedTokens.accessToken.serialize(), wrappedTokens.refreshToken.serialize());
+        return new AuthenticationResponse(
+                wrappedTokens.accessToken.serialize(), wrappedTokens.refreshToken.serialize());
     }
 
     private WrappedTokens saveValidToken(User user, String prevToken) throws ParseException {
@@ -76,7 +78,8 @@ public class AuthenticationService {
                 .accessTokenId(accessToken.getJWTClaimsSet().getJWTID())
                 .refreshTokenId(refreshToken.getJWTClaimsSet().getJWTID())
                 .prevTokenId(prevToken)
-                .refreshTime(new Date(Instant.now().plus(RT_TIME, ChronoUnit.DAYS).toEpochMilli()))
+                .refreshTime(
+                        new Date(Instant.now().plus(RT_TIME, ChronoUnit.DAYS).toEpochMilli()))
                 .build();
         validTokenRepository.save(validToken);
         return new WrappedTokens(accessToken, refreshToken);
@@ -86,7 +89,9 @@ public class AuthenticationService {
         boolean isValid = true;
         try {
             SignedJWT accessToken = decodeToken(request.getAccessToken());
-            validTokenRepository.findById(accessToken.getJWTClaimsSet().getJWTID()).orElseThrow(() -> new AppException(ErrorMessage.UNAUTHENTICATED));
+            validTokenRepository
+                    .findById(accessToken.getJWTClaimsSet().getJWTID())
+                    .orElseThrow(() -> new AppException(ErrorMessage.UNAUTHENTICATED));
         } catch (Exception ae) {
             isValid = false;
         }
@@ -95,23 +100,30 @@ public class AuthenticationService {
 
     public RefreshTokenResponse refreshToken(RefreshTokenRequest request) throws ParseException, JOSEException {
         SignedJWT signRefreshToken = decodeToken(request.getRefreshToken());
-        ValidToken currentValidToken = validTokenRepository.findByRefreshTokenId(signRefreshToken.getJWTClaimsSet().getJWTID()).orElse(null);
+        ValidToken currentValidToken = validTokenRepository
+                .findByRefreshTokenId(signRefreshToken.getJWTClaimsSet().getJWTID())
+                .orElse(null);
         if (currentValidToken == null) {
             SignedJWT signAccessToken = decodeToken(request.getAccessToken());
-            currentValidToken = validTokenRepository.findByPrevTokenId(signAccessToken.getJWTClaimsSet().getJWTID()).orElseThrow(() -> new AppException(ErrorMessage.UNAUTHENTICATED));
+            currentValidToken = validTokenRepository
+                    .findByPrevTokenId(signAccessToken.getJWTClaimsSet().getJWTID())
+                    .orElseThrow(() -> new AppException(ErrorMessage.UNAUTHENTICATED));
             validTokenRepository.delete(currentValidToken);
             throw new AppException(ErrorMessage.UNAUTHENTICATED);
         }
-        User user = userRepository.findByUsername(signRefreshToken.getJWTClaimsSet().getSubject()).orElseThrow(() -> new AppException(ErrorMessage.UNAUTHENTICATED));
+        User user = userRepository
+                .findByUsername(signRefreshToken.getJWTClaimsSet().getSubject())
+                .orElseThrow(() -> new AppException(ErrorMessage.UNAUTHENTICATED));
         WrappedTokens wrappedTokens = saveValidToken(user, currentValidToken.getAccessTokenId());
         validTokenRepository.delete(currentValidToken);
         return new RefreshTokenResponse(wrappedTokens.accessToken.serialize(), wrappedTokens.refreshToken.serialize());
     }
 
-
     public void logout(LogoutRequest request) throws ParseException, JOSEException {
         SignedJWT accessToken = decodeToken(request.getAccessToken());
-        ValidToken validToken = validTokenRepository.findById(accessToken.getJWTClaimsSet().getJWTID()).orElseThrow(() -> new AppException(ErrorMessage.UNAUTHENTICATED));
+        ValidToken validToken = validTokenRepository
+                .findById(accessToken.getJWTClaimsSet().getJWTID())
+                .orElseThrow(() -> new AppException(ErrorMessage.UNAUTHENTICATED));
         if (validToken != null) {
             validTokenRepository.delete(validToken);
         }
@@ -142,7 +154,8 @@ public class AuthenticationService {
                 .jwtID(UUID.randomUUID().toString())
                 .issuer("long")
                 .issueTime(new Date())
-                .expirationTime(new Date(Instant.now().plus(amountToAdd, temporalUnit).toEpochMilli()))
+                .expirationTime(
+                        new Date(Instant.now().plus(amountToAdd, temporalUnit).toEpochMilli()))
                 .claim("scope", buildRoles(user))
                 .build();
 
@@ -155,7 +168,6 @@ public class AuthenticationService {
             throw new RuntimeException(e);
         }
     }
-
 
     private String buildRoles(User user) {
         StringJoiner stringJoiner = new StringJoiner(" ");
@@ -175,6 +187,5 @@ public class AuthenticationService {
         return stringJoiner.toString();
     }
 
-    private record WrappedTokens(SignedJWT accessToken, SignedJWT refreshToken) {
-    }
+    private record WrappedTokens(SignedJWT accessToken, SignedJWT refreshToken) {}
 }

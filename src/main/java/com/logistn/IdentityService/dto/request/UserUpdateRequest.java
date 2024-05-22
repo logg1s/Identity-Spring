@@ -3,13 +3,12 @@ package com.logistn.IdentityService.dto.request;
 import com.logistn.IdentityService.validator.DobConstraint;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
+import java.time.LocalDate;
+import java.util.Set;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-
-import java.time.LocalDate;
-import java.util.Set;
 
 @Data
 @Builder
@@ -19,8 +18,10 @@ public class UserUpdateRequest {
     @Size(min = 8, max = 32)
     @NotNull
     private String password;
+
     @NotNull
     private String firstName;
+
     @NotNull
     private String lastName;
 

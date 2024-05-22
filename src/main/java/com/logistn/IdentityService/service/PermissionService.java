@@ -5,11 +5,10 @@ import com.logistn.IdentityService.dto.response.PermissionResponse;
 import com.logistn.IdentityService.entity.Permission;
 import com.logistn.IdentityService.mapper.PermissionMapper;
 import com.logistn.IdentityService.repository.PermissionRepository;
+import java.util.List;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
 import org.springframework.stereotype.Service;
-
-import java.util.List;
 
 @Service
 @RequiredArgsConstructor

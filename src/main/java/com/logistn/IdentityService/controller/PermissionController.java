@@ -17,16 +17,12 @@ public class PermissionController {
 
     @PostMapping
     public ApiResponse<Object> create(@RequestBody @Valid PermissionRequest request) {
-        return ApiResponse.builder()
-                .result(permissionService.create(request))
-                .build();
+        return ApiResponse.builder().result(permissionService.create(request)).build();
     }
 
     @GetMapping
     public ApiResponse<Object> getAll() {
-        return ApiResponse.builder()
-                .result(permissionService.getAll())
-                .build();
+        return ApiResponse.builder().result(permissionService.getAll()).build();
     }
 
     @DeleteMapping("{permissionId}")

@@ -1,10 +1,9 @@
 package com.logistn.IdentityService.entity;
 
 import jakarta.persistence.*;
-import lombok.*;
-
 import java.time.LocalDate;
 import java.util.Set;
+import lombok.*;
 
 @Entity
 @Getter

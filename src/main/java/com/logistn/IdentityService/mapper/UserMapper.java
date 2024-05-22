@@ -4,12 +4,11 @@ import com.logistn.IdentityService.dto.request.UserCreationRequest;
 import com.logistn.IdentityService.dto.request.UserUpdateRequest;
 import com.logistn.IdentityService.dto.response.UserResponse;
 import com.logistn.IdentityService.entity.User;
+import java.util.List;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 import org.mapstruct.MappingConstants;
 import org.mapstruct.MappingTarget;
-
-import java.util.List;
 
 @Mapper(componentModel = MappingConstants.ComponentModel.SPRING)
 public interface UserMapper {

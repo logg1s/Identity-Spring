@@ -6,27 +6,28 @@ import com.logistn.IdentityService.exception.AppException;
 import com.logistn.IdentityService.exception.ErrorMessage;
 import com.logistn.IdentityService.repository.RoleRepository;
 import com.logistn.IdentityService.repository.UserRepository;
+import java.util.HashSet;
+import java.util.Set;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.ApplicationRunner;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
-import java.util.HashSet;
-import java.util.Set;
-
 @Configuration
 @Slf4j
 public class ApplicationInitConfig {
-    @Value("${env.testMode}")
-    private boolean isTestMode;
 
     @Bean
-    ApplicationRunner applicationRunner(UserRepository userRepository, PasswordEncoder passwordEncoder, RoleRepository roleRepository) {
+    @ConditionalOnProperty(value = "app.testMode", havingValue = "false")
+    ApplicationRunner applicationRunner(
+            UserRepository userRepository, PasswordEncoder passwordEncoder, RoleRepository roleRepository) {
         return args -> {
-            if (!isTestMode && userRepository.findByUsername("admin").isEmpty()) {
-                Role role = roleRepository.findById("ADMIN").orElseThrow(() -> new AppException(ErrorMessage.UNKNOWN_EXCEPTION));
+            if (userRepository.findByUsername("admin").isEmpty()) {
+                Role role = roleRepository
+                        .findById("ADMIN")
+                        .orElseThrow(() -> new AppException(ErrorMessage.UNKNOWN_EXCEPTION));
                 Set<Role> roles = new HashSet<>();
                 roles.add(role);
                 User user = User.builder()

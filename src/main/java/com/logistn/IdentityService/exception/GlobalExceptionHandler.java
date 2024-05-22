@@ -1,6 +1,8 @@
 package com.logistn.IdentityService.exception;
 
 import com.logistn.IdentityService.dto.response.ApiResponse;
+import java.util.Map;
+import java.util.stream.Collectors;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.AccessDeniedException;
 import org.springframework.validation.FieldError;
@@ -8,9 +10,6 @@ import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.servlet.resource.NoResourceFoundException;
-
-import java.util.Map;
-import java.util.stream.Collectors;
 
 @ControllerAdvice
 public class GlobalExceptionHandler {
@@ -48,7 +47,6 @@ public class GlobalExceptionHandler {
         return ResponseEntity.status(errorMessage.getStatusCode()).body(apiResponse);
     }
 
-
     @ExceptionHandler(value = AccessDeniedException.class)
     public ResponseEntity<ApiResponse<Object>> handlingAccessDenied() {
         ErrorMessage errorMessage = ErrorMessage.UNAUTHORIZED;
@@ -74,9 +72,10 @@ public class GlobalExceptionHandler {
     }
 
     @ExceptionHandler(value = MethodArgumentNotValidException.class)
-    public ResponseEntity<ApiResponse<Object>> handlingMethodArgumentNotValidException(MethodArgumentNotValidException exception) {
-        Map<Object, Object> errorMap = exception.getFieldErrors().stream().collect(
-                Collectors.toMap(
+    public ResponseEntity<ApiResponse<Object>> handlingMethodArgumentNotValidException(
+            MethodArgumentNotValidException exception) {
+        Map<Object, Object> errorMap = exception.getFieldErrors().stream()
+                .collect(Collectors.toMap(
                         FieldError::getField,
                         GlobalExceptionHandler::getErrorMessage,
                         (existing, replacement) -> existing));
@@ -89,6 +88,4 @@ public class GlobalExceptionHandler {
                 .build();
         return ResponseEntity.status(errorMessage.getStatusCode()).body(apiResponse);
     }
-
-
 }

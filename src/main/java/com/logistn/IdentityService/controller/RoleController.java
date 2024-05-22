@@ -17,16 +17,12 @@ public class RoleController {
 
     @PostMapping
     public ApiResponse<Object> create(@RequestBody @Valid RoleRequest request) {
-        return ApiResponse.builder()
-                .result(roleService.create(request))
-                .build();
+        return ApiResponse.builder().result(roleService.create(request)).build();
     }
 
     @GetMapping
     public ApiResponse<Object> getAll() {
-        return ApiResponse.builder()
-                .result(roleService.getAll())
-                .build();
+        return ApiResponse.builder().result(roleService.getAll()).build();
     }
 
     @DeleteMapping("{roleId}")

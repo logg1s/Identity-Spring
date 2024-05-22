@@ -1,35 +1,28 @@
+---
 server:
   port: 8080
   servlet:
-    context-path: /identity
-
+    context-path: "/identity"
 spring:
   datasource:
     url: "jdbc:mysql://localhost:3306/identity_service"
-    username: root
-    password: root
+    username: "root"
+    password: "root"
   jpa:
     hibernate:
-      ddl-auto: update
+      ddl-auto: "update"
     show-sql: true
   devtools:
     livereload:
       enabled: true
-
 logging:
   level:
-    org.springframework.security: debug
-    org.springframework.web: debug
-    org.springframework.data.jpa: debug
-
+    org.springframework.security: "debug"
+    org.springframework.web: "debug"
+    org.springframework.data.jpa: "debug"
 jwt:
   Key: "NxFrvBWMm8yoeW/wVgyLDqo1BRa5cHTnyB8m3YH0tOuIj889lrly8ZjGvpzfbfff"
   AT.Time: 10
   RT.Time: 7
-
-env:
-  testMode: ${TEST_MODE:false}
-
-
-
-
+app:
+  testMode: "${TEST_MODE:false}"

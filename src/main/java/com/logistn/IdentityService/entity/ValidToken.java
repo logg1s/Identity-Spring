@@ -2,9 +2,8 @@ package com.logistn.IdentityService.entity;
 
 import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
-import lombok.*;
-
 import java.util.Date;
+import lombok.*;
 
 @Entity
 @Getter
@@ -15,6 +14,7 @@ import java.util.Date;
 public class ValidToken {
     @Id
     private String accessTokenId;
+
     private String refreshTokenId;
     private String prevTokenId;
     private Date refreshTime;

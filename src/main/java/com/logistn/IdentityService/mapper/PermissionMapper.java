@@ -3,10 +3,9 @@ package com.logistn.IdentityService.mapper;
 import com.logistn.IdentityService.dto.request.PermissionRequest;
 import com.logistn.IdentityService.dto.response.PermissionResponse;
 import com.logistn.IdentityService.entity.Permission;
+import java.util.List;
 import org.mapstruct.Mapper;
 import org.mapstruct.MappingConstants;
-
-import java.util.List;
 
 @Mapper(componentModel = MappingConstants.ComponentModel.SPRING)
 public interface PermissionMapper {

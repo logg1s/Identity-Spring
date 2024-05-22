@@ -10,6 +10,9 @@ import com.logistn.IdentityService.exception.ErrorMessage;
 import com.logistn.IdentityService.mapper.UserMapper;
 import com.logistn.IdentityService.repository.RoleRepository;
 import com.logistn.IdentityService.repository.UserRepository;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
 import org.springframework.security.access.prepost.PostAuthorize;
@@ -17,10 +20,6 @@ import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
-
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
 
 @Service
 @RequiredArgsConstructor
@@ -38,7 +37,8 @@ public class UserService {
         User user = userMapper.toUser(request);
         user.setPassword(passwordEncoder.encode(request.getPassword()));
 
-        Role userRole = roleRepository.findById("USER").orElseThrow(() -> new AppException(ErrorMessage.ROLE_NOT_FOUND));
+        Role userRole =
+                roleRepository.findById("USER").orElseThrow(() -> new AppException(ErrorMessage.ROLE_NOT_FOUND));
         Set<Role> roles = new HashSet<>();
         roles.add(userRole);
         user.setRoles(roles);
@@ -53,13 +53,16 @@ public class UserService {
 
     @PostAuthorize("hasRole('ADMIN') || returnObject.username == authentication.name")
     public UserResponse getUser(String id) {
-        return userMapper.toUserResponse(userRepository.findById(id).orElseThrow(() -> new AppException(ErrorMessage.USER_NOT_FOUND)));
+        return userMapper.toUserResponse(
+                userRepository.findById(id).orElseThrow(() -> new AppException(ErrorMessage.USER_NOT_FOUND)));
     }
 
     @PostAuthorize("returnObject.username == authentication.name")
     public UserResponse getMyInfo() {
         String username = SecurityContextHolder.getContext().getAuthentication().getName();
-        User user = userRepository.findByUsername(username).orElseThrow(() -> new AppException(ErrorMessage.USER_NOT_FOUND));
+        User user = userRepository
+                .findByUsername(username)
+                .orElseThrow(() -> new AppException(ErrorMessage.USER_NOT_FOUND));
         return userMapper.toUserResponse(user);
     }
 
