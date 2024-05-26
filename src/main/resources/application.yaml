@@ -21,8 +21,12 @@ logging:
     org.springframework.web: "debug"
     org.springframework.data.jpa: "debug"
 jwt:
-  Key: "NxFrvBWMm8yoeW/wVgyLDqo1BRa5cHTnyB8m3YH0tOuIj889lrly8ZjGvpzfbfff"
-  AT.Time: 10
-  RT.Time: 7
+  key: "NxFrvBWMm8yoeW/wVgyLDqo1BRa5cHTnyB8m3YH0tOuIj889lrly8ZjGvpzfbfff"
+  atTime: 10
+  rtTime: 7
 app:
   testMode: "${TEST_MODE:false}"
+  highestPrivilege:
+    roleName: "ADMIN"
+    username: "admin"
+    password: "admin"

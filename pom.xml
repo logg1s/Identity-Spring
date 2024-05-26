@@ -117,7 +117,6 @@
               <artifactId>lombok-mapstruct-binding</artifactId>
               <version>${lombok-mapstruct-binding.version}</version>
             </path>
-            <!-- other annotation processors -->
           </annotationProcessorPaths>
         </configuration>
       </plugin>
