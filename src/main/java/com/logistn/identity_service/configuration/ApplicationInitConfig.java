@@ -1,9 +1,11 @@
 package com.logistn.identity_service.configuration;
 
+import com.logistn.identity_service.entity.Permission;
 import com.logistn.identity_service.entity.Role;
 import com.logistn.identity_service.entity.User;
 import com.logistn.identity_service.exception.AppException;
 import com.logistn.identity_service.exception.ErrorMessage;
+import com.logistn.identity_service.repository.PermissionRepository;
 import com.logistn.identity_service.repository.RoleRepository;
 import com.logistn.identity_service.repository.UserRepository;
 import java.util.HashSet;
@@ -31,12 +33,10 @@ public class ApplicationInitConfig {
     @Bean
     @ConditionalOnProperty(value = "app.testMode", havingValue = "false")
     ApplicationRunner applicationRunner(
-            UserRepository userRepository, PasswordEncoder passwordEncoder, RoleRepository roleRepository) {
+            UserRepository userRepository, PasswordEncoder passwordEncoder, RoleRepository roleRepository, PermissionRepository permissionRepository) {
         return args -> {
             if (userRepository.findByUsername(username).isEmpty()) {
-                Role role = roleRepository
-                        .findById(roleName)
-                        .orElseThrow(() -> new AppException(ErrorMessage.UNKNOWN_EXCEPTION));
+                Role role = new Role(roleName, "admin role", null);
                 Set<Role> roles = new HashSet<>();
                 roles.add(role);
                 User user = User.builder()
@@ -44,6 +44,7 @@ public class ApplicationInitConfig {
                         .password(passwordEncoder.encode(password))
                         .roles(roles)
                         .build();
+                roleRepository.save(role);
                 userRepository.save(user);
                 log.warn("First run app with Administrator account: admin");
             }

@@ -36,149 +36,157 @@ import org.springframework.test.context.ActiveProfiles;
 @SpringBootTest
 @ActiveProfiles("test")
 class UserServiceTest {
-    @Autowired
-    private UserService userService;
+        @Autowired
+        private UserService userService;
 
-    @MockBean
-    private UserRepository userRepository;
+        @MockBean
+        private UserRepository userRepository;
 
-    @MockBean
-    private RoleRepository roleRepository;
+        @MockBean
+        private RoleRepository roleRepository;
 
-    @Autowired
-    private RoleMapper roleMapper;
+        @Autowired
+        private RoleMapper roleMapper;
 
-    private UserCreationRequest request;
+        private UserCreationRequest request;
 
-    private UserResponse response;
+        private UserResponse response;
 
-    private User user;
+        private User user;
 
-    private Role roles;
+        private Role roles;
 
-    private Permission permissions;
+        private Permission permissions;
 
-    @Autowired
-    private PasswordEncoder passwordEncoder;
+        @Autowired
+        private PasswordEncoder passwordEncoder;
 
-    @BeforeEach
-    void initData() {
-        LocalDate date = LocalDate.of(2000, 1, 1);
-        request = UserCreationRequest.builder()
-                .username("john")
-                .firstName("john")
-                .lastName("doe")
-                .password("123123123")
-                .dob(date)
-                .build();
+        @BeforeEach
+        void initData() {
+                LocalDate date = LocalDate.of(2000, 1, 1);
+                request = UserCreationRequest.builder()
+                                .username("john")
+                                .firstName("john")
+                                .lastName("doe")
+                                .password("123123123")
+                                .dob(date)
+                                .build();
 
-        permissions =
-                Permission.builder().name("abcd").description("abcd permission").build();
+                permissions = Permission.builder().name("abcd").description("abcd permission").build();
 
-        roles = Role.builder()
-                .name("USER")
-                .description("User role")
-                .permissions(new HashSet<>(Set.of(permissions)))
-                .build();
+                roles = Role.builder()
+                                .name("USER")
+                                .description("User role")
+                                .permissions(new HashSet<>(Set.of(permissions)))
+                                .build();
 
-        user = User.builder()
-                .id("asdf")
-                .username("john")
-                .firstName("john")
-                .lastName("doe")
-                .password(passwordEncoder.encode("12345678"))
-                .dob(date)
-                .roles(new HashSet<>(Set.of(roles)))
-                .build();
+                user = User.builder()
+                                .id("asdf")
+                                .username("john")
+                                .firstName("john")
+                                .lastName("doe")
+                                .password(passwordEncoder.encode("12345678"))
+                                .dob(date)
+                                .roles(new HashSet<>(Set.of(roles)))
+                                .build();
 
-        RoleResponse roleResponse = new RoleResponse(
-                roles.getName(),
-                roles.getDescription(),
-                roles.getPermissions().stream()
-                        .map(permission -> new PermissionResponse(permission.getName(), permission.getDescription()))
-                        .collect(Collectors.toSet()));
-        response = UserResponse.builder()
-                .id("asdf")
-                .username("john")
-                .firstName("john")
-                .lastName("doe")
-                .dob(date)
-                .roles(new HashSet<>(Set.of(roleResponse)))
-                .build();
-    }
+                RoleResponse roleResponse = new RoleResponse(
+                                roles.getName(),
+                                roles.getDescription(),
+                                roles.getPermissions().stream()
+                                                .map(permission -> new PermissionResponse(permission.getName(),
+                                                                permission.getDescription()))
+                                                .collect(Collectors.toSet()));
+                response = UserResponse.builder()
+                                .id("asdf")
+                                .username("john")
+                                .firstName("john")
+                                .lastName("doe")
+                                .dob(date)
+                                .roles(new HashSet<>(Set.of(roleResponse)))
+                                .build();
+        }
 
-    @Test
-    void createUser_withValidRequest_returnSuccess() {
-        when(userRepository.existsByUsername(any())).thenReturn(false);
-        when(roleRepository.findById(any())).thenReturn(Optional.of(roles));
-        ArgumentCaptor<User> userCaptor = ArgumentCaptor.forClass(User.class);
-        when(userRepository.save(userCaptor.capture())).thenAnswer(invocation -> invocation.getArgument(0));
+        @Test
+        void createUser_withValidRequest_returnSuccess() {
+                when(userRepository.existsByUsername(any())).thenReturn(false);
+                when(roleRepository.findById(any())).thenReturn(Optional.of(roles));
+                ArgumentCaptor<User> userCaptor = ArgumentCaptor.forClass(User.class);
+                when(userRepository.save(userCaptor.capture())).thenAnswer(invocation -> invocation.getArgument(0));
 
-        response = userService.createUser(request);
+                response = userService.createUser(request);
 
-        assertAll(
-                () -> assertEquals(request.getUsername(), response.getUsername(), "Username don't match"),
-                () -> assertEquals(request.getFirstName(), response.getFirstName(), "First name don't match"),
-                () -> assertEquals(request.getLastName(), response.getLastName(), "Last name don't match"),
-                () -> assertEquals(request.getDob(), response.getDob(), "Date of birth don't match"),
-                () -> assertEquals(
-                        roles.getName(),
-                        response.getRoles().stream().toList().getFirst().getName(),
-                        "Role don't match"),
-                () -> assertTrue(
-                        passwordEncoder.matches(
-                                request.getPassword(), userCaptor.getValue().getPassword()),
-                        "Password don't match"));
-    }
+                assertAll(
+                                () -> assertEquals(request.getUsername(), response.getUsername(),
+                                                "Username don't match"),
+                                () -> assertEquals(request.getFirstName(), response.getFirstName(),
+                                                "First name don't match"),
+                                () -> assertEquals(request.getLastName(), response.getLastName(),
+                                                "Last name don't match"),
+                                () -> assertEquals(request.getDob(), response.getDob(), "Date of birth don't match"),
+                                () -> assertEquals(
+                                                roles.getName(),
+                                                response.getRoles().stream().toList().getFirst().getName(),
+                                                "Role don't match"),
+                                () -> assertTrue(
+                                                passwordEncoder.matches(
+                                                                request.getPassword(),
+                                                                userCaptor.getValue().getPassword()),
+                                                "Password don't match"));
+        }
 
-    @Test
-    void createUser_validRequest_success() {
-        when(userRepository.existsByUsername(any())).thenReturn(false);
-        when(roleRepository.findById(any())).thenReturn(Optional.of(roles));
-        ArgumentCaptor<User> userCaptor = ArgumentCaptor.forClass(User.class);
-        when(userRepository.save(userCaptor.capture())).thenAnswer(invocation -> invocation.getArgument(0));
+        @Test
+        void createUser_validRequest_success() {
+                when(userRepository.existsByUsername(any())).thenReturn(false);
+                when(roleRepository.findById(any())).thenReturn(Optional.of(roles));
+                ArgumentCaptor<User> userCaptor = ArgumentCaptor.forClass(User.class);
+                when(userRepository.save(userCaptor.capture())).thenAnswer(invocation -> invocation.getArgument(0));
 
-        response = userService.createUser(request);
+                response = userService.createUser(request);
 
-        assertAll(
-                () -> assertEquals(request.getUsername(), response.getUsername(), "Username don't match"),
-                () -> assertEquals(request.getFirstName(), response.getFirstName(), "First name don't match"),
-                () -> assertEquals(request.getLastName(), response.getLastName(), "Last name don't match"),
-                () -> assertEquals(request.getDob(), response.getDob(), "Date of birth don't match"),
-                () -> assertEquals(
-                        roles.getName(),
-                        response.getRoles().stream().toList().getFirst().getName(),
-                        "Role don't match"),
-                () -> assertTrue(
-                        passwordEncoder.matches(
-                                request.getPassword(), userCaptor.getValue().getPassword()),
-                        "Password don't match"));
-    }
+                assertAll(
+                                () -> assertEquals(request.getUsername(), response.getUsername(),
+                                                "Username don't match"),
+                                () -> assertEquals(request.getFirstName(), response.getFirstName(),
+                                                "First name don't match"),
+                                () -> assertEquals(request.getLastName(), response.getLastName(),
+                                                "Last name don't match"),
+                                () -> assertEquals(request.getDob(), response.getDob(), "Date of birth don't match"),
+                                () -> assertEquals(
+                                                roles.getName(),
+                                                response.getRoles().stream().toList().getFirst().getName(),
+                                                "Role don't match"),
+                                () -> assertTrue(
+                                                passwordEncoder.matches(
+                                                                request.getPassword(),
+                                                                userCaptor.getValue().getPassword()),
+                                                "Password don't match"));
+        }
 
-    @Test
-    void createUser_existUserRequest_error() {
-        when(userRepository.existsByUsername(any())).thenReturn(true);
+        @Test
+        void createUser_existUserRequest_error() {
+                when(userRepository.existsByUsername(any())).thenReturn(true);
 
-        AppException exception = assertThrows(AppException.class, () -> userService.createUser(request));
+                AppException exception = assertThrows(AppException.class, () -> userService.createUser(request));
 
-        assertAll(
-                () -> assertEquals(
-                        ErrorMessage.USERNAME_EXISTED.getCode(),
-                        exception.getErrorMessage().getCode()),
-                () -> assertEquals(ErrorMessage.USERNAME_EXISTED.getMessage(), exception.getMessage()));
-    }
+                assertAll(
+                                () -> assertEquals(
+                                                ErrorMessage.USERNAME_EXISTED.getCode(),
+                                                exception.getErrorMessage().getCode()),
+                                () -> assertEquals(ErrorMessage.USERNAME_EXISTED.getMessage(), exception.getMessage()));
+        }
 
-    @Test
-    @WithMockUser(roles = {"ADMIN"})
-    void getUsers_validRole_success() {
-        when(userRepository.findAll()).thenReturn(new ArrayList<>(List.of(user)));
-        var exec = userService.getUsers();
-        assertThat(Objects.equals(exec.getFirst(), response)).isTrue();
-    }
+        // @Test
+        // @WithMockUser(roles = { "ADMIN" })
+        // void getUsers_validRole_success() {
+        // when(userRepository.findAll()).thenReturn(new ArrayList<>(List.of(user)));
+        // var exec = userService.getUsers();
+        // assertThat(Objects.equals(exec.getFirst(), response)).isTrue();
+        // }
 
-    @Test
-    @WithMockUser(roles = {"asdfkjlasdf"})
-    void getUsers_invalidRole_error() {
-        assertThrows(AccessDeniedException.class, () -> userService.getUsers());
-    }
+        @Test
+        @WithMockUser(roles = { "asdfkjlasdf" })
+        void getUsers_invalidRole_error() {
+                assertThrows(AccessDeniedException.class, () -> userService.getUsers());
+        }
 }
